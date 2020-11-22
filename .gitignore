@@ -2,6 +2,8 @@
 *.d
 .vs
 *.txt
+x64/
+NaN/x64/
 
 # Compiled Object files
 *.slo
