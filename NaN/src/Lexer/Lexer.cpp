@@ -34,8 +34,6 @@ void Lexer::tokenize()
 					case '[':
 					case ']':
 					case ';':
-					//case '#':
-						// TODO
 					case '*':
 					case '&':
 					case ',':
@@ -97,23 +95,30 @@ Token Lexer::type_check(std::string str, uint64_t line_count, uint16_t index, ui
 	token.Index = index;
 	token.LineNumber = line_count;
 
-	if (str == "int")
+	if (str == "int" || str == "return" || str == "char" || str == "if" || str == "const")
 	{
-		token.Type = "INT";
+		token.Type = str;
 		return token;
 	}
-	else if (str == "return")
+	else if (str == "#include")
 	{
-		token.Type = "RETURN";
+		token.Type = "Include";
 		return token;
 	}
-	else if (str == "char")
+	else if (str[0] == '"' && str[str.length()-1] == '"')
 	{
-		token.Type = "CHAR";
-		return token;
+		token.Type = "String";
+		token.Symbol = str;
 	}
-	token.Type = "IDENTI";
-	token.Symbol = str;
+	else if (this->mapping[str] != "")
+	{
+		token.Type = this->mapping[str];
+	}
+	else
+	{
+		token.Type = "Ident";
+		token.Symbol = str;
+	}
 
 	return token;
 }

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include <algorithm>
+#include <unordered_map>
 #include <sstream>
 #include <fstream>
 #include <vector>
@@ -15,10 +17,31 @@ class Lexer : public Token
 private:
 	std::ifstream* file = nullptr;
 	std::vector<Token> token_list = { };
-	//std::vector<std::string> token_list;
 
 public:
 	Lexer(std::ifstream* file);
 	void tokenize();
 	Token type_check(std::string str, uint64_t line_count, uint16_t index, uint64_t count);
+
+private:
+	std::unordered_map<std::string, std::string> mapping = {
+		{"(", "OpenParen"},
+		{")", "CloseParen"},
+		{"[", "OpenBracket"},
+		{"]", "CloseBracket"},
+		{"{", "OpenBrace"},
+		{"}", "CloseBrace"},
+		{";", "SemiColon"},
+		{",", "Comma"},
+		{"-", "Minue"},
+		{"~", "Tilde"},
+		{"!", "ExclamationMark"},
+		{"&", "Ampersand"},
+		{">", "gt"},
+		{">=", "ge"},
+		{"<", "lt"},
+		{"<=", "LE"},
+		{"=", "Equal"},
+		{"*", "Star"}
+	};
 };
