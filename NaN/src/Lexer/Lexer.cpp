@@ -116,7 +116,26 @@ Token Lexer::type_check(std::string str, uint64_t line_count, uint16_t index, ui
 	}
 	else
 	{
-		token.Type = "Ident";
+		if (this->constant_check[str[0]] != 0)
+		{
+			uint8_t num_check = 1;
+			uint8_t float_check = 0;
+
+			for (uint8_t i = 1; i < str.length(); ++i)
+			{
+				if (str[i] == '.') float_check = 1; continue;
+				if (this->constant_check[str[i]] == 0) num_check = 0;
+			}
+
+			if (num_check && float_check) token.Type = "Float";
+			else if (num_check && ~float_check) token.Type = "Constant";
+			else token.Type = "Ident";
+		}
+		else
+		{
+			token.Type = "Ident";
+		}
+
 		token.Symbol = str;
 	}
 
