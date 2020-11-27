@@ -2,10 +2,10 @@
 
 void Token::print_token(Token token)
 {
-	std::cout << "ID: "		<< token.ID 
-		<< "\tType: "		<< token.Type
-		<< "\t\tLine: "		<< token.LineNumber 
-		<< "["				<< token.Index
-		<< "]\tSymbol: "	<< token.Symbol
-		<< std::endl;
+    std::cout << "ID: "     << token.ID
+        << "\tType: "       << token.Type
+        << "\t\tLine: "     << token.LineNumber
+        << "["              << token.Index
+        << "]\tSymbol: "    << token.Symbol
+        << std::endl;
 }
