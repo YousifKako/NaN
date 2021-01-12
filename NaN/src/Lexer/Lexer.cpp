@@ -1,31 +1,33 @@
 #include <NaN/Lexer/Lexer.hpp>
+#include <NaN/Utilities/Utilities.hpp>
 
 Lexer::Lexer(std::ifstream* file) : file(file)
 {
     this->tokenize();
+    print_tokens(this->token_list);
+}
 
-    for (auto token : this->token_list)
-        print_token(token);
-
+Lexer::~Lexer()
+{
     this->file->close();
 }
 
 void Lexer::tokenize()
 {
-    uint64_t count = 0;
+    uint64_t count = ZERO;
 
     if (this->file->is_open())
     {
-        uint64_t line_count = 0;
-        std::string line = "";
+        uint64_t line_count = 1;
+        std::string line = EMPTY_STRING;
 
         while (std::getline(*this->file, line))
         {
-            std::string to_append = "";
+            std::string to_append = EMPTY_STRING;
             Token token = { };
             uint32_t i = 0;
 
-            for (; i < line.size(); ++i)
+            for ( ; i < line.size(); ++i)
             {
                 switch (line[i])
                 {
@@ -42,7 +44,7 @@ void Lexer::tokenize()
                 case '-':
                 case '~':
                 case '!':
-                    if (to_append != "")
+                    if (to_append != EMPTY_STRING)
                     {
                         token = type_check(to_append, line_count, i, count);
                         this->token_list.push_back(token);
@@ -51,12 +53,12 @@ void Lexer::tokenize()
 
                     token = type_check(std::string(1, line[i]), line_count, i, count);
                     this->token_list.push_back(token);
-                    to_append = "";
+                    to_append = EMPTY_STRING;
                     count++;
                     break;
                 case '\t':
                 case '\n':
-                    if (to_append != "")
+                    if (to_append != EMPTY_STRING)
                     {
                         token = type_check(to_append, line_count, i, count);
                         this->token_list.push_back(token);
@@ -64,20 +66,20 @@ void Lexer::tokenize()
                     }
                     break;
                 case ' ':
-                    if (to_append != "")
+                    if (to_append != EMPTY_STRING)
                     {
                         token = type_check(to_append, line_count, i, count);
                         this->token_list.push_back(token);
                         count++;
                     }
-                    to_append = "";
+                    to_append = EMPTY_STRING;
                     break;
                 default:
                     to_append += line[i];
                     break;
                 }
             }
-            if (to_append != "")
+            if (to_append != EMPTY_STRING)
             {
                 token = type_check(to_append, line_count, i, count);
                 this->token_list.push_back(token);
@@ -89,7 +91,8 @@ void Lexer::tokenize()
     }
 }
 
-Token Lexer::type_check(std::string str, uint64_t line_count, uint16_t index, uint64_t count)
+Token Lexer::type_check(std::string_view str, const uint64_t& line_count,
+    const uint16_t& index, const uint64_t& count)
 {
     Token token = { };
 
@@ -97,7 +100,7 @@ Token Lexer::type_check(std::string str, uint64_t line_count, uint16_t index, ui
     token.Index = index;
     token.LineNumber = line_count;
 
-    if (this->keyword_mapping[str] != "")
+    if (this->keyword_mapping[str] != EMPTY_STRING)
     {
         token.Type = str;
         return token;
@@ -112,7 +115,7 @@ Token Lexer::type_check(std::string str, uint64_t line_count, uint16_t index, ui
         token.Type = "String";
         token.Symbol = str;
     }
-    else if (this->symbol_mapping[str] != "")
+    else if (this->symbol_mapping[str] != EMPTY_STRING)
     {
         token.Type = this->symbol_mapping[str];
     }
@@ -142,4 +145,9 @@ Token Lexer::type_check(std::string str, uint64_t line_count, uint16_t index, ui
     }
 
     return token;
+}
+
+const std::vector<Token> Lexer::get_tokens()
+{
+    return this->token_list;
 }

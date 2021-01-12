@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include <algorithm>
 #include <unordered_map>
 #include <sstream>
@@ -8,9 +7,6 @@
 #include <vector>
 
 #include <NaN/Lexer/Token.hpp>
-
-#define NEXT(line) (i + 1 < (uint32_t)line.size() ? line[i + 1] : 0)
-#define PREV(line) (i - 1 >= 0 && line.size() > 0 ? line[i - 1] : 0)
 
 class Lexer : public Token
 {
@@ -20,11 +16,14 @@ private:
 
 public:
     Lexer(std::ifstream* file);
+    ~Lexer();
     void tokenize();
-    Token type_check(std::string str, uint64_t line_count, uint16_t index, uint64_t count);
+    Token type_check(std::string_view str, const uint64_t& line_count, 
+        const uint16_t& index, const uint64_t& count);
+    const std::vector<Token> get_tokens();
 
 private:
-    std::unordered_map<std::string, std::string> symbol_mapping = {
+    std::unordered_map<std::string_view, std::string_view> symbol_mapping = {
         {"(", "OpenParen"       }, {")" , "CloseParen"  },
         {"[", "OpenBracket"     }, {"]" , "CloseBracket"},
         {"{", "OpenBrace"       }, {"}" , "CloseBrace"  },
@@ -32,11 +31,11 @@ private:
         {"-", "Minue"           }, {"~" , "Tilde"       },
         {"!", "ExclamationMark" }, {"&" , "Ampersand"   },
         {">", "gt"              }, {">=", "ge"          },
-        {"<", "lt"              }, {"<=", "LE"          },
+        {"<", "lt"              }, {"<=", "le"          },
         {"=", "Equal"           }, {"*" , "Star"        }
     };
 
-    std::unordered_map<std::string, std::string> keyword_mapping = {
+    std::unordered_map<std::string_view, std::string_view> keyword_mapping = {
         {"int"      , "int"     }, {"float"     , "float"   },
         {"double"   , "double"  }, {"short"     , "short"   },
         {"long"     , "long"    }, {"return"    , "return"  },
