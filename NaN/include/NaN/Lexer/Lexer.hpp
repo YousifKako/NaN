@@ -28,7 +28,7 @@ private:
         {"[", "OpenBracket"     }, {"]" , "CloseBracket"},
         {"{", "OpenBrace"       }, {"}" , "CloseBrace"  },
         {";", "SemiColon"       }, {"," , "Comma"       },
-        {"-", "Minue"           }, {"~" , "Tilde"       },
+        {"-", "Minus"           }, {"~" , "Tilde"       },
         {"!", "ExclamationMark" }, {"&" , "Ampersand"   },
         {">", "gt"              }, {">=", "ge"          },
         {"<", "lt"              }, {"<=", "le"          },
